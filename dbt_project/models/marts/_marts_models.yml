@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension (SCD Type 1 - latest state only)"
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+
+  - name: dim_retailers
+    description: "Retailer dimension (SCD Type 2 - tracks zone, status, and name changes over time via dbt snapshots)"
+    columns:
+      - name: retailer_key
+        tests: [unique, not_null]
+      - name: retailer_id
+        tests: [not_null]
+
+  - name: dim_products
+    description: "Product dimension (SCD Type 1 - latest state only)"
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+
+  - name: fct_orders
+    description: "Fact table of all orders (incremental, merge on order_id)"
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+
+  - name: fct_order_items
+    description: "Fact table of all order line items (incremental, merge on item_id)"
+    columns:
+      - name: item_id
+        tests: [unique, not_null]
+
+  - name: fct_daily_zone_summary
+    description: "Daily aggregated metrics by zone: revenue, order count, average basket size"
+
+  - name: fct_retailer_performance
+    description: "Retailer-level lifetime metrics: total revenue, order count, average order value, item count"

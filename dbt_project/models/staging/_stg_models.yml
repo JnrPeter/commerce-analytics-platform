@@ -1,0 +1,88 @@
+version: 2
+
+sources:
+  - name: commerce
+    description: "Raw e-commerce operational data loaded from PostgreSQL via dlt"
+    schema: raw
+    tables:
+      - name: customers
+        description: "Customer profiles"
+        columns:
+          - name: customer_id
+            tests: [unique, not_null]
+      - name: retailers
+        description: "Retailer profiles (zone, category, status)"
+        columns:
+          - name: retailer_id
+            tests: [unique, not_null]
+      - name: products
+        description: "Product catalog"
+        columns:
+          - name: product_id
+            tests: [unique, not_null]
+      - name: orders
+        description: "Customer orders"
+        columns:
+          - name: order_id
+            tests: [unique, not_null]
+      - name: order_items
+        description: "Line items per order"
+        columns:
+          - name: item_id
+            tests: [unique, not_null]
+
+models:
+  - name: stg_customers
+    description: "Cleaned customer records"
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+      - name: email
+        tests: [not_null]
+      - name: tier
+        tests:
+          - accepted_values:
+              values: ['bronze', 'silver', 'gold', 'platinum']
+
+  - name: stg_retailers
+    description: "Cleaned retailer records"
+    columns:
+      - name: retailer_id
+        tests: [unique, not_null]
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['active', 'suspended', 'churned', 'onboarding']
+
+  - name: stg_orders
+    description: "Cleaned order records"
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: total_amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['pending', 'confirmed', 'delivered', 'cancelled']
+
+  - name: stg_order_items
+    description: "Cleaned order line items"
+    columns:
+      - name: item_id
+        tests: [unique, not_null]
+      - name: quantity
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 100
+
+  - name: stg_products
+    description: "Cleaned product catalog"
+    columns:
+      - name: product_id
+        tests: [unique, not_null]

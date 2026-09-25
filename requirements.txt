@@ -1,0 +1,20 @@
+# Data generation
+faker==28.4.1
+psycopg2-binary==2.9.9
+
+# Ingestion
+dlt[postgres,snowflake]==1.0.0
+
+# dbt
+dbt-core==1.9.0
+dbt-snowflake==1.9.0
+dbt-postgres==1.9.0
+elementary-data==0.16.0
+dbt-expectations==0.10.0
+
+# Orchestration
+apache-airflow==2.10.0
+astronomer-cosmos==1.7.0
+
+# Utilities
+python-dotenv==1.0.1

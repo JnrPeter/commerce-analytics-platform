@@ -1,0 +1,19 @@
+commerce:
+  target: dev
+
+  outputs:
+    dev:
+      type: duckdb
+      path: "../warehouse.duckdb"
+      threads: 4
+
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'COMMERCE_ANALYTICS') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORM') }}"
+      schema: raw
+      threads: 4
