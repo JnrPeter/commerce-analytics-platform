@@ -1,16 +1,16 @@
-zone,region,city
-Accra Central,Greater Accra,Accra
-East Legon,Greater Accra,Accra
-Madina,Greater Accra,Accra
-Tema,Greater Accra,Tema
-Kasoa,Central,Kasoa
-Achimota,Greater Accra,Accra
-Dansoman,Greater Accra,Accra
-Spintex,Greater Accra,Accra
-Airport City,Greater Accra,Accra
-Osu,Greater Accra,Accra
-Labone,Greater Accra,Accra
-Cantonments,Greater Accra,Accra
-Adenta,Greater Accra,Accra
-Teshie,Greater Accra,Accra
-Labadi,Greater Accra,Accra
+zone,region,area_type
+Downtown,Central,urban
+Westside,West,suburban
+Eastgate,East,suburban
+Northridge,North,suburban
+Southbank,South,urban
+Riverside,Central,urban
+Hilltop,North,residential
+Lakewood,West,residential
+Midtown,Central,urban
+Old Quarter,Central,urban
+Harbor District,South,commercial
+Greenfield,East,residential
+Sunset Park,West,residential
+Brookdale,North,suburban
+Crescent Bay,South,coastal

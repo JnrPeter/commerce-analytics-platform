@@ -3,7 +3,7 @@ Simulate real-world data mutations for SCD tracking.
 Run this multiple times to build up change history:
   - Retailers change zones, get suspended/reactivated, rebrand
   - Customers upgrade tiers, update emails
-  - New orders arrive
+  - New orders arrive (with full financial and delivery fields)
 Each run represents a "day" of operational changes.
 """
 
@@ -13,7 +13,10 @@ from datetime import datetime, timedelta
 import psycopg2
 from faker import Faker
 
-from config import PG_CONFIG, MUTATE_CONFIG, ZONES, STATUSES, TIERS, ORDER_STATUSES
+from config import (
+    PG_CONFIG, MUTATE_CONFIG, ZONES, STATUSES, TIERS,
+    ORDER_STATUSES, PAYMENT_METHODS, ORDER_CHANNELS,
+)
 
 fake = Faker()
 
@@ -40,34 +43,76 @@ def add_new_orders(cur, n):
         retailer_id = random.randint(1, num_retailers)
         zone = random.choice(ZONES)
         status = random.choices(ORDER_STATUSES, weights=[5, 15, 70, 10])[0]
+        payment_method = random.choices(PAYMENT_METHODS, weights=[60, 30, 10])[0]
+        order_channel = random.choices(ORDER_CHANNELS, weights=[65, 30, 5])[0]
         order_date = now - timedelta(hours=random.randint(0, 23), minutes=random.randint(0, 59))
 
-        cur.execute(
-            """INSERT INTO orders (customer_id, retailer_id, zone, status, total_amount, created_at, updated_at)
-               VALUES (%s, %s, %s, %s, 0, %s, %s) RETURNING order_id""",
-            (customer_id, retailer_id, zone, status, order_date, order_date),
-        )
-        order_id = cur.fetchone()[0]
-
+        # Generate items and subtotal
         num_items = random.randint(1, 5)
-        order_total = 0
+        items = []
+        subtotal = 0
 
         for _ in range(num_items):
             product_id = random.randint(1, num_products)
             quantity = random.randint(1, 4)
             unit_price = round(random.uniform(2.00, 250.00), 2)
-            order_total += quantity * unit_price
+            subtotal += quantity * unit_price
+            items.append((product_id, fake.catch_phrase(), quantity, unit_price))
 
+        subtotal = round(subtotal, 2)
+
+        # Financial fields
+        has_discount = random.random() < 0.25
+        discount_amount = round(subtotal * random.uniform(0.05, 0.20), 2) if has_discount else 0
+        delivery_fee = round(random.uniform(3.00, 15.00), 2)
+        total_amount = round(subtotal - discount_amount + delivery_fee, 2)
+
+        # Delivery performance
+        estimated_delivery_minutes = random.choice([30, 45, 60, 90])
+
+        if status == 'delivered':
+            variance = random.gauss(0, 15)
+            actual_delivery_minutes = max(10, int(estimated_delivery_minutes + variance))
+            delay = actual_delivery_minutes - estimated_delivery_minutes
+            if delay <= 0:
+                rating = random.choices([4, 5], weights=[30, 70])[0]
+            elif delay <= 15:
+                rating = random.choices([3, 4, 5], weights=[20, 50, 30])[0]
+            elif delay <= 30:
+                rating = random.choices([2, 3, 4], weights=[30, 50, 20])[0]
+            else:
+                rating = random.choices([1, 2, 3], weights=[40, 40, 20])[0]
+        elif status == 'cancelled':
+            actual_delivery_minutes = None
+            rating = None
+        else:
+            actual_delivery_minutes = None
+            rating = None
+
+        cur.execute(
+            """INSERT INTO orders (
+                customer_id, retailer_id, zone, status,
+                payment_method, order_channel,
+                subtotal, discount_amount, delivery_fee, total_amount,
+                estimated_delivery_minutes, actual_delivery_minutes, rating,
+                created_at, updated_at
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING order_id""",
+            (
+                customer_id, retailer_id, zone, status,
+                payment_method, order_channel,
+                subtotal, discount_amount, delivery_fee, total_amount,
+                estimated_delivery_minutes, actual_delivery_minutes, rating,
+                order_date, order_date,
+            ),
+        )
+        order_id = cur.fetchone()[0]
+
+        for product_id, product_name, quantity, unit_price in items:
             cur.execute(
                 """INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price, created_at)
                    VALUES (%s, %s, %s, %s, %s, %s)""",
-                (order_id, product_id, fake.catch_phrase(), quantity, unit_price, order_date),
+                (order_id, product_id, product_name, quantity, unit_price, order_date),
             )
-
-        cur.execute(
-            "UPDATE orders SET total_amount = %s WHERE order_id = %s",
-            (round(order_total, 2), order_id),
-        )
 
 
 def change_retailer_zones(cur, n):

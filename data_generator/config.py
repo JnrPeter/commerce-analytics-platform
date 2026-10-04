@@ -12,30 +12,30 @@ PG_CONFIG = {
     "password": os.getenv("PG_PASSWORD", "commerce_pass"),
 }
 
-# Volume knobs — adjust these to control data size
+# Volume knobs
 SEED_CONFIG = {
-    "num_customers": 500,
-    "num_retailers": 50,
-    "num_products": 200,
-    "num_orders": 5000,
+    "num_customers": 4000,
+    "num_retailers": 1000,
+    "num_products": 1000,
+    "num_orders": 20000,
     "max_items_per_order": 5,
-    "date_range_days": 365,  # orders spread across this many days
+    "date_range_days": 365,
 }
 
-# Mutation knobs — controls how much changes per mutation run
+# Mutation knobs
 MUTATE_CONFIG = {
-    "new_orders": 200,
-    "retailer_zone_changes": 3,
-    "retailer_status_changes": 2,
-    "customer_tier_upgrades": 10,
-    "customer_email_updates": 5,
+    "new_orders": 500,
+    "retailer_zone_changes": 8,
+    "retailer_status_changes": 5,
+    "customer_tier_upgrades": 25,
+    "customer_email_updates": 15,
 }
 
-# Zones for retailer assignment
+# Zones
 ZONES = [
-    "Accra Central", "East Legon", "Madina", "Tema", "Kasoa",
-    "Achimota", "Dansoman", "Spintex", "Airport City", "Osu",
-    "Labone", "Cantonments", "Adenta", "Teshie", "Labadi",
+    "Downtown", "Westside", "Eastgate", "Northridge", "Southbank",
+    "Riverside", "Hilltop", "Lakewood", "Midtown", "Old Quarter",
+    "Harbor District", "Greenfield", "Sunset Park", "Brookdale", "Crescent Bay",
 ]
 
 # Retailer categories
@@ -52,3 +52,9 @@ TIERS = ["bronze", "silver", "gold", "platinum"]
 
 # Order statuses
 ORDER_STATUSES = ["pending", "confirmed", "delivered", "cancelled"]
+
+# Payment methods
+PAYMENT_METHODS = ["mobile_money", "card", "cash_on_delivery"]
+
+# Order channels
+ORDER_CHANNELS = ["mobile_app", "web", "ussd"]

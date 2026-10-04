@@ -1,7 +1,7 @@
 """
 dlt pipeline: PostgreSQL (source) -> Snowflake or DuckDB (warehouse).
-Extracts all five source tables and loads them into a raw schema.
-Uses merge write disposition for incremental loads after the first run.
+Extracts all five source tables with incremental loading and merge write disposition.
+Schema contract set to freeze: any upstream schema change fails loudly.
 """
 
 import os
@@ -27,6 +27,50 @@ def build_pipeline():
         table_names=["customers", "retailers", "products", "orders", "order_items"],
     )
 
+    # Schema contract: freeze means any source schema change breaks the pipeline loudly
+    source.schema_contract = {
+    "tables": "evolve",
+    "columns": "freeze",
+    "data_type": "freeze",
+}
+
+    # --- Dimension tables: merge on PK, incremental on updated_at ---
+    # These tables have rows that get updated (tier changes, zone changes, etc.)
+
+    source.customers.apply_hints(
+        primary_key="customer_id",
+        write_disposition="merge",
+        incremental=dlt.sources.incremental("updated_at"),
+    )
+
+    source.retailers.apply_hints(
+        primary_key="retailer_id",
+        write_disposition="merge",
+        incremental=dlt.sources.incremental("updated_at"),
+    )
+
+    source.products.apply_hints(
+        primary_key="product_id",
+        write_disposition="merge",
+        incremental=dlt.sources.incremental("updated_at"),
+    )
+
+    # --- Fact tables: merge on PK, incremental on created_at ---
+    # Orders can have status updates (pending -> delivered), so merge handles that.
+    # Order items are append-only but merge is safe with a PK.
+
+    source.orders.apply_hints(
+        primary_key="order_id",
+        write_disposition="merge",
+        incremental=dlt.sources.incremental("created_at"),
+    )
+
+    source.order_items.apply_hints(
+        primary_key="item_id",
+        write_disposition="merge",
+        incremental=dlt.sources.incremental("created_at"),
+    )
+
     # Destination: Snowflake or DuckDB based on env config
     snowflake_account = os.getenv("SNOWFLAKE_ACCOUNT", "")
 
@@ -50,7 +94,7 @@ def main():
     pipeline, source = build_pipeline()
 
     print(f"Loading to {pipeline.destination.destination_name}...")
-    info = pipeline.run(source, write_disposition="replace")
+    info = pipeline.run(source)
     print(info)
     print("Ingestion complete.")
 
