@@ -10,30 +10,80 @@ sources:
         columns:
           - name: customer_id
             tests: [unique, not_null]
+          - name: email
+            tests: [not_null]
+          - name: tier
+            tests:
+              - accepted_values:
+                  values: ['bronze', 'silver', 'gold', 'platinum']
+
       - name: retailers
-        description: "Retailer profiles (zone, category, status)"
+        description: "Retailer profiles with zone, category, and status"
         columns:
           - name: retailer_id
             tests: [unique, not_null]
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['active', 'suspended', 'churned', 'onboarding']
+          - name: category
+            tests:
+              - accepted_values:
+                  values: ['Restaurant', 'Grocery', 'Pharmacy', 'Electronics', 'Fashion', 'Beauty', 'Home & Garden', 'Sports']
+
       - name: products
         description: "Product catalog"
         columns:
           - name: product_id
             tests: [unique, not_null]
+          - name: price
+            tests: [not_null]
+
       - name: orders
-        description: "Customer orders"
+        description: "Customer orders with financial and delivery performance fields"
         columns:
           - name: order_id
             tests: [unique, not_null]
+          - name: customer_id
+            tests: [not_null]
+          - name: retailer_id
+            tests: [not_null]
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['pending', 'confirmed', 'delivered', 'cancelled']
+          - name: payment_method
+            tests:
+              - accepted_values:
+                  values: ['mobile_money', 'card', 'cash_on_delivery']
+          - name: order_channel
+            tests:
+              - accepted_values:
+                  values: ['mobile_app', 'web', 'ussd']
+          - name: total_amount
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100000
+
       - name: order_items
         description: "Line items per order"
         columns:
           - name: item_id
             tests: [unique, not_null]
+          - name: order_id
+            tests: [not_null]
+          - name: quantity
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 1
+                  max_value: 100
 
 models:
   - name: stg_customers
-    description: "Cleaned customer records"
+    description: "Cleaned customer records from raw.customers"
     columns:
       - name: customer_id
         tests: [unique, not_null]
@@ -45,7 +95,7 @@ models:
               values: ['bronze', 'silver', 'gold', 'platinum']
 
   - name: stg_retailers
-    description: "Cleaned retailer records"
+    description: "Cleaned retailer records from raw.retailers"
     columns:
       - name: retailer_id
         tests: [unique, not_null]
@@ -55,26 +105,48 @@ models:
               values: ['active', 'suspended', 'churned', 'onboarding']
 
   - name: stg_orders
-    description: "Cleaned order records"
+    description: "Cleaned order records with financial and delivery fields from raw.orders"
     columns:
       - name: order_id
         tests: [unique, not_null]
+      - name: customer_id
+        tests: [not_null]
+      - name: retailer_id
+        tests: [not_null]
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['pending', 'confirmed', 'delivered', 'cancelled']
+      - name: payment_method
+        tests:
+          - accepted_values:
+              values: ['mobile_money', 'card', 'cash_on_delivery']
+      - name: order_channel
+        tests:
+          - accepted_values:
+              values: ['mobile_app', 'web', 'ussd']
       - name: total_amount
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 0
               max_value: 100000
-      - name: status
+      - name: rating
+        description: "1-5 stars, only present for delivered orders"
         tests:
-          - accepted_values:
-              values: ['pending', 'confirmed', 'delivered', 'cancelled']
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 5
+              config:
+                where: "rating is not null"
 
   - name: stg_order_items
-    description: "Cleaned order line items"
+    description: "Cleaned order line items with computed line_total from raw.order_items"
     columns:
       - name: item_id
         tests: [unique, not_null]
+      - name: order_id
+        tests: [not_null]
       - name: quantity
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
@@ -82,7 +154,12 @@ models:
               max_value: 100
 
   - name: stg_products
-    description: "Cleaned product catalog"
+    description: "Cleaned product catalog from raw.products"
     columns:
       - name: product_id
         tests: [unique, not_null]
+      - name: price
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000
