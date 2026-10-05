@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_orders_enriched
-    description: "Orders enriched with customer name, tier, retailer name, category, and zone context"
+    description: "Orders enriched with customer name, tier, retailer name, category, zone context, and delivery performance metrics"
 
   - name: int_order_items_enriched
-    description: "Order line items enriched with product category and order context"
+    description: "Order line items enriched with product category, order context, and financial fields"
