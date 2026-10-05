@@ -13,6 +13,7 @@ from faker import Faker
 from config import (
     PG_CONFIG, SEED_CONFIG, ZONES, CATEGORIES, STATUSES,
     TIERS, ORDER_STATUSES, PAYMENT_METHODS, ORDER_CHANNELS,
+    PRODUCT_NAMES,
 )
 
 fake = Faker()
@@ -129,18 +130,44 @@ def seed_retailers(cur, n):
 
 def seed_products(cur, n):
     print(f"Seeding {n} products...")
-    product_names = set()
-    while len(product_names) < n:
-        product_names.add(fake.catch_phrase())
 
-    for name in product_names:
+    # Price ranges per category (min, max)
+    price_ranges = {
+        "Restaurant": (5.00, 80.00),
+        "Grocery": (1.50, 60.00),
+        "Pharmacy": (2.00, 120.00),
+        "Electronics": (5.00, 500.00),
+        "Fashion": (10.00, 300.00),
+        "Beauty": (3.00, 150.00),
+        "Home & Garden": (5.00, 250.00),
+        "Sports": (5.00, 200.00),
+    }
+
+    # Build a pool of (name, category) pairs from PRODUCT_NAMES
+    product_pool = []
+    for category, names in PRODUCT_NAMES.items():
+        for name in names:
+            product_pool.append((name, category))
+
+    # If we need more than the pool, add numbered variants
+    while len(product_pool) < n:
+        cat = random.choice(CATEGORIES)
+        base_name = random.choice(PRODUCT_NAMES[cat])
+        variant = f"{base_name} (v{random.randint(2, 9)})"
+        product_pool.append((variant, cat))
+
+    random.shuffle(product_pool)
+    selected = product_pool[:n]
+
+    for name, category in selected:
+        min_price, max_price = price_ranges[category]
         cur.execute(
             """INSERT INTO products (name, category, price, created_at, updated_at)
                VALUES (%s, %s, %s, %s, %s)""",
             (
                 name,
-                random.choice(CATEGORIES),
-                round(random.uniform(1.50, 500.00), 2),
+                category,
+                round(random.uniform(min_price, max_price), 2),
                 fake.date_time_between(start_date="-1y", end_date="-1M"),
                 datetime.utcnow(),
             ),
@@ -150,6 +177,10 @@ def seed_products(cur, n):
 def seed_orders(cur, num_orders, num_customers, num_retailers, num_products, max_items, date_range_days):
     print(f"Seeding {num_orders} orders with up to {max_items} items each...")
     base_date = datetime.utcnow() - timedelta(days=date_range_days)
+
+    # Pre-load product names and prices for realistic order items
+    cur.execute("SELECT product_id, name, price FROM products")
+    product_lookup = {row[0]: (row[1], float(row[2])) for row in cur.fetchall()}
 
     for i in range(num_orders):
         if (i + 1) % 5000 == 0:
@@ -168,18 +199,20 @@ def seed_orders(cur, num_orders, num_customers, num_retailers, num_products, max
             minutes=random.randint(0, 59),
         )
 
-        # Generate line items first to calculate subtotal
+        # Generate line items using actual product names and prices
         num_items = random.randint(1, max_items)
         items = []
         subtotal = 0
 
         for _ in range(num_items):
             product_id = random.randint(1, num_products)
+            product_name, base_price = product_lookup.get(product_id, ("Unknown Product", 10.00))
             quantity = random.randint(1, 4)
-            unit_price = round(random.uniform(2.00, 250.00), 2)
+            # Small price variance (+/- 10%) to simulate different sizes/options
+            unit_price = round(base_price * random.uniform(0.90, 1.10), 2)
             line_total = round(quantity * unit_price, 2)
             subtotal += line_total
-            items.append((product_id, fake.catch_phrase(), quantity, unit_price))
+            items.append((product_id, product_name, quantity, unit_price))
 
         subtotal = round(subtotal, 2)
 

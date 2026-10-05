@@ -178,6 +178,24 @@ def update_customer_emails(cur, n):
         )
 
 
+def change_product_prices(cur, n):
+    """Simulate product price adjustments (triggers SCD2 on dim_products)."""
+    print(f"Changing {n} product prices...")
+    cur.execute("SELECT product_id, price FROM products ORDER BY RANDOM() LIMIT %s", (n,))
+    rows = cur.fetchall()
+
+    for product_id, current_price in rows:
+        # Adjust price by -15% to +15%, minimum 1.50
+        change_pct = random.uniform(-0.15, 0.15)
+        new_price = max(1.50, round(float(current_price) * (1 + change_pct), 2))
+        cur.execute(
+            "UPDATE products SET price = %s, updated_at = NOW() WHERE product_id = %s",
+            (new_price, product_id),
+        )
+        direction = "up" if new_price > float(current_price) else "down"
+        print(f"  Product {product_id}: {current_price} -> {new_price} ({direction})")
+
+
 def main():
     conn = get_conn()
     cur = conn.cursor()
@@ -187,6 +205,7 @@ def main():
     change_retailer_statuses(cur, MUTATE_CONFIG["retailer_status_changes"])
     upgrade_customer_tiers(cur, MUTATE_CONFIG["customer_tier_upgrades"])
     update_customer_emails(cur, MUTATE_CONFIG["customer_email_updates"])
+    change_product_prices(cur, MUTATE_CONFIG["product_price_changes"])
 
     conn.commit()
     cur.close()

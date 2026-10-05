@@ -16,10 +16,12 @@ models:
         tests: [not_null]
 
   - name: dim_products
-    description: "Product dimension (SCD Type 1 - latest state only)"
+    description: "Product dimension (SCD Type 2 - tracks price changes over time via dbt snapshots)"
     columns:
-      - name: product_id
+      - name: product_key
         tests: [unique, not_null]
+      - name: product_id
+        tests: [not_null]
 
   - name: fct_orders
     description: "Fact table of all orders with financial and delivery performance fields (incremental, merge on order_id)"

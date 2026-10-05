@@ -1,10 +1,11 @@
 """
 dlt pipeline: PostgreSQL (source) -> Snowflake or DuckDB (warehouse).
 Extracts all five source tables with incremental loading and merge write disposition.
-Schema contract set to freeze: any upstream schema change fails loudly.
+Schema contract set to freeze columns and data types; tables can evolve on first run.
 """
 
 import os
+from datetime import datetime
 
 import dlt
 from dlt.sources.sql_database import sql_database
@@ -27,32 +28,46 @@ def build_pipeline():
         table_names=["customers", "retailers", "products", "orders", "order_items"],
     )
 
-    # Schema contract: freeze means any source schema change breaks the pipeline loudly
+    # Schema contract: allow new tables, freeze columns and types
     source.schema_contract = {
-    "tables": "evolve",
-    "columns": "freeze",
-    "data_type": "freeze",
-}
+        "tables": "evolve",
+        "columns": "freeze",
+        "data_type": "freeze",
+    }
 
     # --- Dimension tables: merge on PK, incremental on updated_at ---
     # These tables have rows that get updated (tier changes, zone changes, etc.)
+    # Using initial_value to ensure first load captures everything,
+    # and row_order="asc" so the cursor advances correctly.
 
     source.customers.apply_hints(
         primary_key="customer_id",
         write_disposition="merge",
-        incremental=dlt.sources.incremental("updated_at"),
+        incremental=dlt.sources.incremental(
+            cursor_path="updated_at",
+            initial_value=datetime(2020, 1, 1),
+            row_order="asc",
+        ),
     )
 
     source.retailers.apply_hints(
         primary_key="retailer_id",
         write_disposition="merge",
-        incremental=dlt.sources.incremental("updated_at"),
+        incremental=dlt.sources.incremental(
+            cursor_path="updated_at",
+            initial_value=datetime(2020, 1, 1),
+            row_order="asc",
+        ),
     )
 
     source.products.apply_hints(
         primary_key="product_id",
         write_disposition="merge",
-        incremental=dlt.sources.incremental("updated_at"),
+        incremental=dlt.sources.incremental(
+            cursor_path="updated_at",
+            initial_value=datetime(2020, 1, 1),
+            row_order="asc",
+        ),
     )
 
     # --- Fact tables: merge on PK, incremental on created_at ---
@@ -62,13 +77,21 @@ def build_pipeline():
     source.orders.apply_hints(
         primary_key="order_id",
         write_disposition="merge",
-        incremental=dlt.sources.incremental("created_at"),
+        incremental=dlt.sources.incremental(
+            cursor_path="created_at",
+            initial_value=datetime(2020, 1, 1),
+            row_order="asc",
+        ),
     )
 
     source.order_items.apply_hints(
         primary_key="item_id",
         write_disposition="merge",
-        incremental=dlt.sources.incremental("created_at"),
+        incremental=dlt.sources.incremental(
+            cursor_path="created_at",
+            initial_value=datetime(2020, 1, 1),
+            row_order="asc",
+        ),
     )
 
     # Destination: Snowflake or DuckDB based on env config
