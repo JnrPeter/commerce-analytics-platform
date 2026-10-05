@@ -22,10 +22,22 @@ models:
         tests: [unique, not_null]
 
   - name: fct_orders
-    description: "Fact table of all orders (incremental, merge on order_id)"
+    description: "Fact table of all orders with financial and delivery performance fields (incremental, merge on order_id)"
     columns:
       - name: order_id
         tests: [unique, not_null]
+      - name: total_amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: delivery_performance
+        tests:
+          - accepted_values:
+              values: ['on_time', 'slightly_late', 'late', 'very_late']
+              config:
+                where: "delivery_performance is not null"
 
   - name: fct_order_items
     description: "Fact table of all order line items (incremental, merge on item_id)"
@@ -34,7 +46,10 @@ models:
         tests: [unique, not_null]
 
   - name: fct_daily_zone_summary
-    description: "Daily aggregated metrics by zone: revenue, order count, average basket size"
+    description: "Daily aggregated metrics by zone: revenue, delivery performance, ratings, payment mix"
 
   - name: fct_retailer_performance
-    description: "Retailer-level lifetime metrics: total revenue, order count, average order value, item count"
+    description: "Retailer-level lifetime metrics: revenue, order count, delivery SLA, average rating"
+
+  - name: fct_payment_channel_summary
+    description: "Daily aggregated metrics by payment method and order channel"

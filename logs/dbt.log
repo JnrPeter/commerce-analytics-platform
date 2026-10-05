@@ -14,3 +14,19 @@ Runtime Error
 [0m13:45:43.968230 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76cbeaf54a40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76cbe99022a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76cbe98b2a50>]}
 [0m13:45:43.968649 [debug] [MainThread]: Flushing usage events
 [0m13:45:44.519325 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:06:44.398201 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1b44af30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1b606000>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1b605dc0>]}
+
+
+============================== 13:06:44.403787 | 74eca8da-b403-467b-a287-785f4ea805b8 ==============================
+[0m13:06:44.403787 [info ] [MainThread]: Running with dbt=1.12.5
+[0m13:06:44.404415 [debug] [MainThread]: running dbt with arguments {'no_print': 'None', 'warn_error': 'None', 'maximum_seed_size_mib': '1', 'target_path': 'None', 'profiles_dir': '/home/penning/.dbt', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'quiet': 'False', 'log_format': 'default', 'fail_fast': 'False', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'indirect_selection': 'eager', 'log_path': 'logs', 'use_colors': 'True', 'write_json': 'True', 'invocation_command': 'dbt snapshot', 'partial_parse': 'True', 'log_cache_events': 'False', 'static_parser': 'True', 'printer_width': '80', 'use_experimental_parser': 'False', 'debug': 'False', 'cache_selected_only': 'False', 'hints_enabled': 'True', 'empty': 'False'}
+[0m13:06:44.404901 [error] [MainThread]: [[31mERROR[0m]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /home/penning/commerce-analytics-platform/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m13:06:44.406810 [debug] [MainThread]: Resource report: {"command_name": "snapshot", "command_success": false, "command_wall_clock_time": 0.09097696, "process_in_blocks": "52832", "process_kernel_time": 0.318869, "process_mem_max_rss": "108768", "process_out_blocks": "16", "process_user_time": 1.307768}
+[0m13:06:44.407223 [debug] [MainThread]: Command `dbt snapshot` failed at 13:06:44.407139 after 0.09 seconds
+[0m13:06:44.407524 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1a9647a0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1bc49f70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x77cd1a918110>]}
+[0m13:06:44.407867 [debug] [MainThread]: Flushing usage events
+[0m13:06:45.506847 [debug] [MainThread]: An error was encountered while trying to flush usage events

@@ -1,6 +1,5 @@
 with orders as (
     select * from {{ ref('fct_orders') }}
-    where status != 'cancelled'
 ),
 
 items as (
@@ -19,13 +18,29 @@ select
     r.zone,
     r.category,
     r.status,
-    count(distinct o.order_id)      as total_orders,
-    count(distinct o.customer_id)   as unique_customers,
-    sum(o.total_amount)             as total_revenue,
-    avg(o.total_amount)             as avg_order_value,
-    sum(i.quantity)                  as total_items_sold,
-    min(o.created_at)               as first_order_at,
-    max(o.created_at)               as last_order_at
+    count(distinct o.order_id)                                      as total_orders,
+    count(distinct case when o.status != 'cancelled' then o.order_id end) as completed_orders,
+    count(distinct o.customer_id)                                   as unique_customers,
+    sum(o.total_amount)                                             as total_revenue,
+    avg(o.total_amount)                                             as avg_order_value,
+    sum(o.discount_amount)                                          as total_discounts_given,
+    sum(i.quantity)                                                  as total_items_sold,
+    avg(o.rating)                                                   as avg_rating,
+    avg(o.actual_delivery_minutes)                                  as avg_delivery_minutes,
+    count(case when o.delivery_performance = 'on_time' then 1 end)  as on_time_count,
+    count(case when o.delivery_performance is not null then 1 end)  as delivered_count,
+    round(
+        count(case when o.delivery_performance = 'on_time' then 1 end) * 100.0
+        / nullif(count(case when o.delivery_performance is not null then 1 end), 0),
+        2
+    )                                                               as on_time_pct,
+    round(
+        count(case when o.status = 'cancelled' then 1 end) * 100.0
+        / nullif(count(distinct o.order_id), 0),
+        2
+    )                                                               as cancellation_rate,
+    min(o.created_at)                                               as first_order_at,
+    max(o.created_at)                                               as last_order_at
 from retailers r
 left join orders o on r.retailer_id = o.retailer_id
 left join items i on o.order_id = i.order_id

@@ -13,6 +13,8 @@ select
     retailer_id,
     zone,
     order_status,
+    payment_method,
+    order_channel,
     product_id,
     product_name,
     product_category,
