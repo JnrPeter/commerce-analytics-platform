@@ -17,3 +17,11 @@ commerce:
       role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORM') }}"
       schema: raw
       threads: 4
+
+elementary:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../commerce_ingestion.duckdb"
+      threads: 4

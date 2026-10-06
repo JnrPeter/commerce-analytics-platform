@@ -1,0 +1,435 @@
+2026-10-06 09:17:49 — INFO — Running with edr=0.26.0
+2026-10-06 09:17:50 — DEBUG — Profile 'elementary' not found in profiles.yml
+2026-10-06 09:17:50 — INFO — Installing packages for edr internal dbt package...
+2026-10-06 09:17:50 — INFO — Running dbt command --log-format json deps --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:17:55 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:17:56 — ERROR — Unable to get the latest invocation: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'[0m
+2026-10-06 09:17:56 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:17:57 — DEBUG — Could not get warehouse info.
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/data_monitoring/data_monitoring.py", line 142, in _get_warehouse_info
+    self.internal_dbt_runner.run_operation(
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:17:57 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:17:58 — ERROR — Failed to parse Elementary's database and schema.[0m
+2026-10-06 09:17:58 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:17:59 — ERROR — Could not generate the report - Error: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+Please reach out to our community for help with this issue.[0m
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/report/report.py", line 85, in get_report_data
+    tests_api = TestsAPI(
+                ^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 53, in __init__
+    self.test_results_db_rows = self._get_test_results_db_rows(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 67, in _get_test_results_db_rows
+    return self.tests_fetcher.get_all_test_results_db_rows(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/fetchers/tests/tests.py", line 27, in get_all_test_results_db_rows
+    run_operation_response = self.dbt_runner.run_operation(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:21:41 — INFO — Running with edr=0.26.0
+2026-10-06 09:21:42 — DEBUG — Profile 'elementary' not found in profiles.yml
+2026-10-06 09:21:42 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:21:43 — ERROR — Unable to get the latest invocation: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'[0m
+2026-10-06 09:21:43 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:21:44 — DEBUG — Could not get warehouse info.
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/data_monitoring/data_monitoring.py", line 142, in _get_warehouse_info
+    self.internal_dbt_runner.run_operation(
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:21:44 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:21:45 — ERROR — Failed to parse Elementary's database and schema.[0m
+2026-10-06 09:21:45 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:21:46 — ERROR — Could not generate the report - Error: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+Please reach out to our community for help with this issue.[0m
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/report/report.py", line 85, in get_report_data
+    tests_api = TestsAPI(
+                ^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 53, in __init__
+    self.test_results_db_rows = self._get_test_results_db_rows(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 67, in _get_test_results_db_rows
+    return self.tests_fetcher.get_all_test_results_db_rows(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/fetchers/tests/tests.py", line 27, in get_all_test_results_db_rows
+    run_operation_response = self.dbt_runner.run_operation(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:25:40 — INFO — Running with edr=0.26.0
+2026-10-06 09:25:41 — DEBUG — Profile 'elementary' not found in profiles.yml
+2026-10-06 09:25:41 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:25:42 — ERROR — Unable to get the latest invocation: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'[0m
+2026-10-06 09:25:42 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:25:43 — DEBUG — Could not get warehouse info.
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/data_monitoring/data_monitoring.py", line 142, in _get_warehouse_info
+    self.internal_dbt_runner.run_operation(
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:25:43 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:25:44 — ERROR — Failed to parse Elementary's database and schema.[0m
+2026-10-06 09:25:44 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:25:45 — ERROR — Could not generate the report - Error: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+Please reach out to our community for help with this issue.[0m
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/report/report.py", line 85, in get_report_data
+    tests_api = TestsAPI(
+                ^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 53, in __init__
+    self.test_results_db_rows = self._get_test_results_db_rows(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 67, in _get_test_results_db_rows
+    return self.tests_fetcher.get_all_test_results_db_rows(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/fetchers/tests/tests.py", line 27, in get_all_test_results_db_rows
+    run_operation_response = self.dbt_runner.run_operation(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+Runtime Error
+  Could not find profile named 'elementary'
+2026-10-06 09:32:22 — INFO — Running with edr=0.26.0
+2026-10-06 09:32:23 — DEBUG — Resolved adapter type 'duckdb' for target 'dev'
+2026-10-06 09:32:23 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:32:29 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 269
+[31;20m2026-10-06 09:32:29 — ERROR — Unable to get the latest invocation: list index out of range[0m
+2026-10-06 09:32:29 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:32:31 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 489
+2026-10-06 09:32:31 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:32:32 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 451
+2026-10-06 09:32:32 — INFO — Elementary's database and schema: 'commerce_ingestion.main'
+2026-10-06 09:32:32 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+[31;20m2026-10-06 09:32:33 — ERROR — Could not generate the report - Error: Failed to run dbt command.
+{"info": {"name": "RunningOperationCaughtError", "code": "Q001", "msg": "[\u001b[31mERROR\u001b[0m]: Encountered an error while running operation: Runtime Error\n  Catalog Error: Table with name elementary_test_results does not exist!\n  Did you mean \"information_schema.referential_constraints\"?\n  \n  LINE 11:         select * from \"commerce_ingestion\".\"main\".\"elementary_test_results\"\n                                 ^", "level": "error", "invocationId": "9373db65-7a25-4d8f-82bc-86e308beb81c", "pid": 8062, "thread": "MainThread", "ts": "2026-10-06T09:32:32.811823Z"}, "data": {"exc": "Runtime Error\n  Catalog Error: Table with name elementary_test_results does not exist!\n  Did you mean \"information_schema.referential_constraints\"?\n  \n  LINE 11:         select * from \"commerce_ingestion\".\"main\".\"elementary_test_results\"\n                                 ^"}}
+Please reach out to our community for help with this issue.[0m
+Traceback (most recent call last):
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/report/report.py", line 85, in get_report_data
+    tests_api = TestsAPI(
+                ^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 53, in __init__
+    self.test_results_db_rows = self._get_test_results_db_rows(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/api/tests/tests.py", line 67, in _get_test_results_db_rows
+    return self.tests_fetcher.get_all_test_results_db_rows(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/fetchers/tests/tests.py", line 27, in get_all_test_results_db_rows
+    run_operation_response = self.dbt_runner.run_operation(
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 369, in run_operation
+    result = self._run_command(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 227, in _run_command
+    return self._inner_run_command_with_retries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/command_line_dbt_runner.py", line 264, in _inner_run_command_with_retries
+    result = self._inner_run_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/clients/dbt/api_dbt_runner.py", line 59, in _inner_run_command
+    raise DbtCommandError(
+elementary.exceptions.exceptions.DbtCommandError: Failed to run dbt command.
+{"info": {"name": "RunningOperationCaughtError", "code": "Q001", "msg": "[\u001b[31mERROR\u001b[0m]: Encountered an error while running operation: Runtime Error\n  Catalog Error: Table with name elementary_test_results does not exist!\n  Did you mean \"information_schema.referential_constraints\"?\n  \n  LINE 11:         select * from \"commerce_ingestion\".\"main\".\"elementary_test_results\"\n                                 ^", "level": "error", "invocationId": "9373db65-7a25-4d8f-82bc-86e308beb81c", "pid": 8062, "thread": "MainThread", "ts": "2026-10-06T09:32:32.811823Z"}, "data": {"exc": "Runtime Error\n  Catalog Error: Table with name elementary_test_results does not exist!\n  Did you mean \"information_schema.referential_constraints\"?\n  \n  LINE 11:         select * from \"commerce_ingestion\".\"main\".\"elementary_test_results\"\n                                 ^"}}
+2026-10-06 09:34:55 — INFO — Running with edr=0.26.0
+2026-10-06 09:34:57 — DEBUG — Resolved adapter type 'duckdb' for target 'dev'
+2026-10-06 09:34:57 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:03 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 2407
+2026-10-06 09:35:03 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:04 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 567
+2026-10-06 09:35:04 — INFO — edr (0.26.0) and Elementary's dbt package (0.26.0) are compatible.
+2026-10-06 09:35:04 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:05 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 451
+2026-10-06 09:35:05 — INFO — Elementary's database and schema: 'commerce_ingestion.main'
+2026-10-06 09:35:05 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:09 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 537863
+2026-10-06 09:35:09 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_source_freshness_results", "macro_args": {"days_back": 7, "invocations_per_test": 720}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:10 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_source_freshness_results", "macro_args": {"days_back": 7, "invocations_per_test": 720}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 401
+2026-10-06 09:35:10 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_seeds", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:11 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_seeds", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 1063
+2026-10-06 09:35:11 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_snapshots", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:13 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_snapshots", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 4511
+2026-10-06 09:35:13 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:14 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 17299
+2026-10-06 09:35:14 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_sources", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:16 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_sources", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 4661
+2026-10-06 09:35:16 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_exposures", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:17 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_exposures", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 401
+2026-10-06 09:35:17 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_singular_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:18 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_singular_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 851
+2026-10-06 09:35:18 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_runs", "macro_args": {"days_back": 7, "exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:20 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_runs", "macro_args": {"days_back": 7, "exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 47877
+2026-10-06 09:35:20 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_dbt_models_test_coverage", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:21 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_dbt_models_test_coverage", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 3827
+2026-10-06 09:35:21 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:23 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 134533
+2026-10-06 09:35:23 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_nodes_depends_on_nodes", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:22 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_nodes_depends_on_nodes", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 9811
+2026-10-06 09:35:22 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:23 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 10697
+2026-10-06 09:35:23 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocations_data", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:35:25 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocations_data", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 917
+2026-10-06 09:45:29 — INFO — Running with edr=0.26.0
+2026-10-06 09:45:30 — DEBUG — Resolved adapter type 'duckdb' for target 'dev'
+2026-10-06 09:45:30 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:30 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 2408
+2026-10-06 09:45:30 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:32 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_adapter_type_and_unique_id", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 568
+2026-10-06 09:45:32 — INFO — edr (0.26.0) and Elementary's dbt package (0.26.0) are compatible.
+2026-10-06 09:45:32 — DEBUG — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:33 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_elementary_database_and_schema", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 452
+2026-10-06 09:45:33 — INFO — Elementary's database and schema: 'commerce_ingestion.main'
+2026-10-06 09:45:33 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:37 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_test_results", "macro_args": {"days_back": 7, "invocations_per_test": 720, "disable_passed_test_metrics": false, "skip_test_result_rows": false}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 817040
+2026-10-06 09:45:37 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_source_freshness_results", "macro_args": {"days_back": 7, "invocations_per_test": 720}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:38 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_source_freshness_results", "macro_args": {"days_back": 7, "invocations_per_test": 720}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 402
+2026-10-06 09:45:38 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_seeds", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:40 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_seeds", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 1064
+2026-10-06 09:45:40 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_snapshots", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:41 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_snapshots", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 4512
+2026-10-06 09:45:41 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:43 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 17300
+2026-10-06 09:45:43 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_sources", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:44 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_sources", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 4662
+2026-10-06 09:45:44 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_exposures", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:46 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_exposures", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 402
+2026-10-06 09:45:46 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_singular_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:47 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_singular_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 852
+2026-10-06 09:45:47 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_runs", "macro_args": {"days_back": 7, "exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:48 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_runs", "macro_args": {"days_back": 7, "exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 63760
+2026-10-06 09:45:48 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_dbt_models_test_coverage", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:50 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_dbt_models_test_coverage", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 3828
+2026-10-06 09:45:50 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:51 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_tests", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 134534
+2026-10-06 09:45:51 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_nodes_depends_on_nodes", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:53 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_nodes_depends_on_nodes", "macro_args": {"exclude_elementary": true}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 9992
+2026-10-06 09:45:53 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:54 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocation", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 10698
+2026-10-06 09:45:54 — INFO — Running dbt command --log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocations_data", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project
+2026-10-06 09:45:55 — DEBUG — Result bytes size for command '--log-format json run-operation elementary.log_macro_results --args {"macro_name": "elementary_cli.get_models_latest_invocations_data", "macro_args": {}} --project-dir /home/penning/commerce-analytics-platform/venv/lib/python3.12/site-packages/elementary/monitor/dbt_project' is 918

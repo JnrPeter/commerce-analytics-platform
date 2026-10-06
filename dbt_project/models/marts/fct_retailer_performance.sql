@@ -10,12 +10,18 @@ items as (
 retailers as (
     select * from {{ ref('dim_retailers') }}
     where is_current = true
+),
+
+zones as (
+    select * from {{ ref('zone_lookup') }}
 )
 
 select
     r.retailer_id,
     r.retailer_name,
     r.zone,
+    z.region,
+    z.area_type,
     r.category,
     r.status,
     count(distinct o.order_id)                                      as total_orders,
@@ -44,4 +50,5 @@ select
 from retailers r
 left join orders o on r.retailer_id = o.retailer_id
 left join items i on o.order_id = i.order_id
-group by 1, 2, 3, 4, 5
+left join zones z on r.zone = z.zone
+group by 1, 2, 3, 4, 5, 6, 7
