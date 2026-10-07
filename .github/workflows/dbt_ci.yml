@@ -10,21 +10,6 @@ jobs:
   dbt-build-and-test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: commerce
-          POSTGRES_USER: commerce_user
-          POSTGRES_PASSWORD: commerce_pass
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,61 +17,40 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          pip install dbt-duckdb "dlt[duckdb,postgres,sql_database]" faker psycopg2-binary python-dotenv sqlalchemy
-
-      - name: Generate source data
-        env:
-          PG_HOST: localhost
-          PG_PORT: 5433
-          PG_DATABASE: commerce
-          PG_USER: commerce_user
-          PG_PASSWORD: commerce_pass
-        run: |
-          cd data_generator
-          python generate.py
-
-      - name: Run dlt ingestion
-        env:
-          PG_HOST: localhost
-          PG_PORT: 5433
-          PG_DATABASE: commerce
-          PG_USER: commerce_user
-          PG_PASSWORD: commerce_pass
-        run: |
-          python ingestion/load_to_warehouse.py
-
-      - name: Install dbt packages
-        run: |
+          pip install dbt-snowflake dbt-expectations elementary-data
           cd dbt_project && dbt deps
 
-      - name: Run dbt seed
+      - name: Run dbt build
         env:
           DBT_PROFILES_DIR: ./dbt_project
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
           cd dbt_project
-          dbt seed
+          dbt build --fail-fast --target prod
 
-      - name: Run dbt snapshot
+      - name: Run dbt tests
         env:
           DBT_PROFILES_DIR: ./dbt_project
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
           cd dbt_project
-          dbt snapshot
-
-      - name: Run dbt build and test
-        env:
-          DBT_PROFILES_DIR: ./dbt_project
-        run: |
-          cd dbt_project
-          dbt build --fail-fast
+          dbt test --target prod
 
       - name: Generate dbt docs
-        env:
-          DBT_PROFILES_DIR: ./dbt_project
         run: |
           cd dbt_project
           dbt docs generate
