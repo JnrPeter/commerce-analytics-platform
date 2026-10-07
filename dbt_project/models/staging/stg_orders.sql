@@ -21,3 +21,4 @@ select
     updated_at
 from source
 -- CI test
+-- CI verification
