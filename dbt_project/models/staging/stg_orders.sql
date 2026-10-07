@@ -20,3 +20,4 @@ select
     created_at,
     updated_at
 from source
+-- CI test
