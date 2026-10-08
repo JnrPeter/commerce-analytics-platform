@@ -2,22 +2,20 @@
 Commerce Analytics Pipeline DAG
 
 Schedule: Daily
-Flow: generate_new_data -> ingest_to_warehouse -> dbt_snapshot -> dbt_build -> elementary_report
+Flow: mutate_data -> ingest_to_warehouse -> dbt_snapshot -> dbt_build -> elementary_report
 
-Non-dbt steps use BashOperator.
-dbt build step uses astronomer-cosmos to render each dbt model as its own Airflow task.
+All steps use BashOperator. Each runs from the project root directory
+using the project's Python virtual environment.
 """
 
 from datetime import datetime
-from pathlib import Path
 
+from airflow.providers.standard.operators.bash import BashOperator
 from airflow import DAG
-from airflow.operators.bash import BashOperator
 
-from cosmos import DbtTaskGroup, ProjectConfig, ProfileConfig, RenderConfig
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DBT_PROJECT_PATH = PROJECT_ROOT / "dbt_project"
+PROJECT_ROOT = "/home/penning/commerce-analytics-platform"
+VENV_ACTIVATE = f"source {PROJECT_ROOT}/venv/bin/activate"
+DBT_DIR = f"{PROJECT_ROOT}/dbt_project"
 
 default_args = {
     "owner": "analytics_engineering",
@@ -27,43 +25,36 @@ default_args = {
 with DAG(
     dag_id="commerce_analytics_pipeline",
     default_args=default_args,
-    description="Full e-commerce analytics pipeline: generate, ingest, snapshot, build, test",
+    description="Full e-commerce analytics pipeline: mutate, ingest, snapshot, build, test",
     schedule="@daily",
     start_date=datetime(2026, 1, 1),
     catchup=False,
     tags=["commerce", "dbt", "analytics"],
 ) as dag:
 
-    generate_data = BashOperator(
-        task_id="generate_new_data",
-        bash_command=f"cd {PROJECT_ROOT}/data_generator && python mutate.py",
+    mutate_data = BashOperator(
+        task_id="mutate_source_data",
+        bash_command=f"{VENV_ACTIVATE} && cd {PROJECT_ROOT} && python data_generator/mutate.py",
     )
 
     ingest = BashOperator(
         task_id="ingest_to_warehouse",
-        bash_command=f"cd {PROJECT_ROOT}/ingestion && python load_to_warehouse.py",
+        bash_command=f"{VENV_ACTIVATE} && cd {PROJECT_ROOT} && python ingestion/load_to_warehouse.py",
     )
 
     dbt_snapshot = BashOperator(
         task_id="dbt_snapshot",
-        bash_command=f"cd {DBT_PROJECT_PATH} && dbt snapshot",
+        bash_command=f"{VENV_ACTIVATE} && cd {DBT_DIR} && dbt snapshot",
     )
 
-    dbt_build = DbtTaskGroup(
-        group_id="dbt_build",
-        project_config=ProjectConfig(str(DBT_PROJECT_PATH)),
-        profile_config=ProfileConfig(
-            profile_name="commerce",
-            target_name="dev",
-        ),
-        render_config=RenderConfig(
-            select=["path:models"],
-        ),
+    dbt_build = BashOperator(
+        task_id="dbt_build",
+        bash_command=f"{VENV_ACTIVATE} && cd {DBT_DIR} && dbt build --fail-fast",
     )
 
     elementary_report = BashOperator(
         task_id="elementary_report",
-        bash_command=f"cd {DBT_PROJECT_PATH} && edr report",
+        bash_command=f"{VENV_ACTIVATE} && cd {DBT_DIR} && edr report",
     )
 
-    generate_data >> ingest >> dbt_snapshot >> dbt_build >> elementary_report
+    mutate_data >> ingest >> dbt_snapshot >> dbt_build >> elementary_report
