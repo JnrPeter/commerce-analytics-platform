@@ -22,3 +22,4 @@ select
 from source
 -- CI test
 -- CI verification
+-- CI yaml fix test
