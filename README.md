@@ -1,6 +1,6 @@
 # Commerce Analytics Platform
 
-An end-to-end analytics engineering project that simulates a food-delivery marketplace and processes it through a production-grade data pipeline: from transactional source data to SCD-tracked dimensions and analytics-ready fact tables, orchestrated daily with Airflow and tested on every pull request.
+An end-to-end analytics engineering project that simulates a multi-category e-commerce marketplace and processes it through a production-grade data pipeline: from transactional source data to SCD-tracked dimensions and analytics-ready fact tables, orchestrated daily with Airflow and tested on every pull request.
 
 ```
 PostgreSQL  -->  dlt  -->  DuckDB  -->  dbt  -->  Marts
