@@ -7,6 +7,8 @@ PostgreSQL  -->  dlt  -->  DuckDB  -->  dbt  -->  Marts
   (source)    (ingest)   (warehouse)  (transform)  (analytics)
 ```
 
+> **Want to run this project?** This repo documents the iterative build process. For the containerized, one-command version, see [ecommerce-analytics-pipeline](https://github.com/JnrPeter/ecommerce-analytics-pipeline).
+
 ## What This Project Demonstrates
 
 - **Incremental ingestion** with dlt (merge strategy, high-water mark cursors, schema contracts)
@@ -68,7 +70,6 @@ commerce-analytics-platform/
 ├── .github/workflows/
 │   └── dbt_ci.yml               # Full pipeline test on every PR
 ├── docker-compose.yml           # PostgreSQL 16 container
-├── Makefile                     # Common commands
 └── requirements.txt
 ```
 
@@ -102,68 +103,13 @@ commerce-analytics-platform/
 | orders | 20,000+ | 500 new orders per run |
 | order_items | ~60,000+ | ~1,500 new items per run |
 
-## Setup
-
-### Prerequisites
-
-- Python 3.12+
-- Docker and Docker Compose
-
-### Quick Start
-
-```bash
-# Clone the repo
-git clone https://github.com/jnrpeter/commerce-analytics-platform.git
-cd commerce-analytics-platform
-
-# Start Postgres and install dependencies
-docker-compose up -d
-pip install -r requirements.txt
-cd dbt_project && dbt deps && cd ..
-
-# Generate source data
-python data_generator/generate.py
-
-# Run the full pipeline
-python ingestion/load_to_warehouse.py
-cd dbt_project
-dbt seed
-dbt snapshot
-dbt build
-```
-
-### Run the Pipeline with Make
-
-```bash
-make setup              # Docker + deps + dbt deps
-make generate           # Seed source data
-make full-pipeline      # generate > ingest > snapshot > build > test
-```
-
-## Airflow Orchestration
-
-The pipeline runs daily via Airflow 3.1.1 with LocalExecutor and a Postgres metadata backend.
-
-### Starting Airflow
-
-```bash
-# Start Postgres container first
-cd ~/commerce-analytics-platform && docker-compose up -d
-
-# Activate Airflow venv and start services
-source ~/airflow/airflow_venv/bin/activate
-airflow api-server -p 8080 -D && airflow scheduler
-
-# UI at http://localhost:8080
-```
-
-### DAG: commerce_analytics_pipeline
+## DAG: commerce_analytics_pipeline
 
 ```
 mutate_source_data > ingest_to_warehouse > dbt_snapshot > dbt_build > elementary_report
 ```
 
-All 5 tasks use BashOperator. The DAG file is symlinked from `dags/commerce_pipeline_dag.py` to `~/airflow/dags/`.
+All 5 tasks use BashOperator. The DAG runs daily via Airflow with LocalExecutor and a Postgres metadata backend.
 
 ## CI/CD
 
@@ -197,7 +143,7 @@ Three layers of defense:
 | Warehouse | DuckDB |
 | Transformation | dbt (dbt-duckdb) |
 | Data quality | dbt tests, dbt_expectations, Elementary |
-| Orchestration | Airflow 3.1.1 (LocalExecutor + Postgres) |
+| Orchestration | Airflow (LocalExecutor + Postgres) |
 | CI/CD | GitHub Actions |
 
 ## Key Design Decisions
@@ -209,3 +155,9 @@ Three layers of defense:
 **Why snapshots before build?** Snapshots capture row versions before dbt overwrites dimensions. dim_retailers and dim_products read from snapshots to build SCD Type 2 history. Skipping the snapshot step means new zone moves and price changes are invisible to the marts.
 
 **Why incremental + full rebuild facts?** Row-level facts (fct_orders, fct_order_items) grow over time and benefit from incremental merge. Aggregated facts (zone summary, retailer performance) are cheap to rebuild and need to reflect status changes in older orders.
+
+## Containerized version
+
+This project has been fully containerized with Docker Compose. The production-ready version with Airflow orchestration, automated data quality monitoring, and CI/CD lives here:
+
+[ecommerce-analytics-pipeline](https://github.com/JnrPeter/ecommerce-analytics-pipeline)
